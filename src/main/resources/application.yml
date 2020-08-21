@@ -1,0 +1,71 @@
+spring:
+    application:
+      name: YAJP
+    datasource:
+        url: jdbc:h2:file:@project.basedir@/database/singlesignondb;DB_CLOSE_ON_EXIT=FALSE
+        username: sa
+        driverClassName: org.h2.Driver
+    hikari:
+        minimum-idle: 3 #minimum number of idle connections maintained by HikariCP in a connection pool
+        maximum-pool-size: 10 #maximum pool size
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.H2Dialect
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              clientId: 539298958164-1u72qrp4uusp3a7fgg4vkdqcis4bbpd3.apps.googleusercontent.com
+              clientSecret: GFSqLDoyzGYDZ-n-t-FuqXEK
+              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - email
+                - profile
+            facebook:
+              clientId: 121189305185277
+              clientSecret: 42ffe5aa7379e8326387e0fe16f34132
+              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - email
+                - public_profile
+            github:
+              clientId: 9388de5e0c1663995b8c
+              clientSecret: 09d170ab4a0a57a85874fd265b35e714c00d191e
+              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - user:email
+                - read:user
+          provider:
+            facebook:
+              authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+              tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+              userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+app:
+  auth:
+    tokenSecret: 926D96C90030DA58429D2751AC1BDBBD
+    tokenExpirationMsec: 864000000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - https://yet-another-job-portal.web.app/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+
+logging: 
+  level: 
+    root: INFO
+#  file: /${spring.application.name}.log
