@@ -31,4 +31,4 @@ jobs:
       uses: actions/upload-artifact@master
       with:
           name: fatJar
-          path: target/*.jar
+          path: target/*.jar*
