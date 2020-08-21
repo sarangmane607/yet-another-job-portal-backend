@@ -20,8 +20,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Replace secrets
-      uses: datamonsters/replace-action
+    - name: Replace Action
+      uses: datamonsters/replace-action@v2
       with:
         files: 'src/main/resources/application.yml'
         replacements: '__google_clientId__=${{ secrets.__google_clientId__ }},__google_clientSecret__=${{ secrets.__google_clientSecret__ }},__facebook_clientId__=${{ secrets.__facebook_clientId__ }},__facebook_clientSecret__=${{ secrets.__facebook_clientSecret__ }},__github_clientId__=${{ secrets.__github_clientId__ }},__github_clientSecret__=${{ secrets.__github_clientSecret__ }}'
