@@ -17,6 +17,6 @@ jobs:
             replacements: '__google_clientId__=${{ secrets.__google_clientId__ }},__google_clientSecret__=${{ secrets.__google_clientSecret__ }},__facebook_clientId__=${{ secrets.__facebook_clientId__ }},__facebook_clientSecret__=${{ secrets.__facebook_clientSecret__ }},__github_clientId__=${{ secrets.__github_clientId__ }},__github_clientSecret__=${{ secrets.__github_clientSecret__ }}'
       - uses: akhileshns/heroku-deploy@v3.4.6 # This is the action
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: 1#${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "project-sprint" #Must be unique in Heroku
           heroku_email: "sarang.mane.607@gmail.com"
