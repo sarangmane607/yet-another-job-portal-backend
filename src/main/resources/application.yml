@@ -26,22 +26,22 @@ spring:
         client:
           registration:
             google:
-              clientId: 539298958164-1u72qrp4uusp3a7fgg4vkdqcis4bbpd3.apps.googleusercontent.com
-              clientSecret: GFSqLDoyzGYDZ-n-t-FuqXEK
+              clientId: __google_clientId__
+              clientSecret: __google_clientSecret__
               redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
               scope:
                 - email
                 - profile
             facebook:
-              clientId: 121189305185277
-              clientSecret: 42ffe5aa7379e8326387e0fe16f34132
+              clientId: __facebook_clientId__
+              clientSecret: __facebook_clientSecret__
               redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
               scope:
                 - email
                 - public_profile
             github:
-              clientId: 9388de5e0c1663995b8c
-              clientSecret: 09d170ab4a0a57a85874fd265b35e714c00d191e
+              clientId: __github_clientId__
+              clientSecret: __github_clientSecret__
               redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
               scope:
                 - user:email
