@@ -11,7 +11,7 @@ spring:
     h2:
         console:
             enabled: true
-            path: /h2-console
+            path: /h2-console #path on heroku : jdbc:h2:file:/app/database/singlesignondb;DB_CLOSE_ON_EXIT=FALSE
             settings:
               web-allow-others: true
     jpa:
@@ -70,3 +70,4 @@ logging:
   level: 
     root: INFO
 #  file: /${spring.application.name}.log
+#__google_clientId__=${{ secrets.__google_clientId__ }},__google_clientSecret__=${{ secrets.__google_clientSecret__ }},__facebook_clientId__=${{ secrets.__facebook_clientId__ }},__facebook_clientSecret__=${{ secrets.__facebook_clientSecret__ }},__github_clientId__=${{ secrets.__github_clientId__ }},__github_clientSecret__=${{ secrets.__github_clientSecret__ }}
