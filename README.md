@@ -20,12 +20,15 @@ I call it "Yet Another Job Portal" :)
 3. JPA
 4. JWT (For stateless server)
 5. h2 in memory database
+<br/>
 
-##### There are two repositories for this project<br/>
+
+### There are two repositories for this project<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. React front end ui. [repo here](https://github.com/sarangmane607/yet-another-job-portal-ui) <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Backend written in java, spring framework. [repo here](https://github.com/sarangmane607/yet-another-job-portal-backend)<br/>
     
 Currently **backend (java)** is deployed on **[heroku](https://www.heroku.com/)** cloud and **front-end ui (react)** is deployed on **[firebase](https://firebase.google.com/)** server
+<br/>
 <br/>
 
 ### Steps to start react on local machine
@@ -40,6 +43,7 @@ npm run start:dev
 ```
 ##### ***If your backend is not running on 8080 port then modify ```REACT_APP_API_BASE_URL``` parameter from  ```.env.development``` file***
 ##### ***React ui will start on 3000 port(usually). if not change ```REACT_APP_REACT_URI``` parameter from  ```.env.development``` file***
+<br/>
 <br/>
 
 ### Steps to start backend(java) on local machine
