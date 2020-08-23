@@ -2,7 +2,8 @@ spring:
     application:
       name: YAJP
     datasource:
-        url: jdbc:h2:file:@project.basedir@/database/singlesignondb;DB_CLOSE_ON_EXIT=FALSE
+        #url: jdbc:h2:file:@project.basedir@/database/singlesignondb;DB_CLOSE_ON_EXIT=FALSE
+        url: jdbc:h2:mem:singlesignondb;DB_CLOSE_ON_EXIT=FALSE
         username: sa
         driverClassName: org.h2.Driver
     hikari:
@@ -62,12 +63,12 @@ app:
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - https://yet-another-job-portal.web.app/oauth2/redirect
+      - https://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
 
 logging: 
   level: 
-    root: INFO
-#  file: /${spring.application.name}.log
-#__google_clientId__=${{ secrets.__google_clientId__ }},__google_clientSecret__=${{ secrets.__google_clientSecret__ }},__facebook_clientId__=${{ secrets.__facebook_clientId__ }},__facebook_clientSecret__=${{ secrets.__facebook_clientSecret__ }},__github_clientId__=${{ secrets.__github_clientId__ }},__github_clientSecret__=${{ secrets.__github_clientSecret__ }}
+    root: ERROR
+  #file: D:/Sarang/git/repo/ver/yet-another-job-portal-backend/${spring.application.name}.log
+  #__google_clientId__=${{ secrets.__google_clientId__ }},__google_clientSecret__=${{ secrets.__google_clientSecret__ }},__facebook_clientId__=${{ secrets.__facebook_clientId__ }},__facebook_clientSecret__=${{ secrets.__facebook_clientSecret__ }},__github_clientId__=${{ secrets.__github_clientId__ }},__github_clientSecret__=${{ secrets.__github_clientSecret__ }}

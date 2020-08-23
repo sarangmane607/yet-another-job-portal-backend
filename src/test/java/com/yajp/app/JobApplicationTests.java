@@ -1,4 +1,4 @@
-package com.yajp.login;
+package com.yajp.app;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,8 +13,6 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -28,15 +26,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yajp.security.model.User;
-import com.yajp.security.payload.ApiResponse;
+import com.yajp.app.controllers.payload.ApplyJobResponse;
+import com.yajp.app.controllers.payload.UserJobApplicationCollection;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class AuthenticationTests {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationTests.class);
+public class JobApplicationTests {
 	
 	@Autowired
     private WebApplicationContext context;
@@ -57,79 +53,86 @@ public class AuthenticationTests {
 	@Order(1)
 	public void contextLoads() {
 	}
-
-	@Test
-	@Order(2)
-	public void signup() throws Exception {
-		LOGGER.debug(">>>Test signup");
-		MvcResult mvcResult = mvc.perform(post("/auth/signup")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\": \"admin\", \"email\": \"test_admin@gmail.com\", \"password\": \"qwerty\"}"))
-		.andReturn();
-		assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
-		String content = mvcResult.getResponse().getContentAsString();
-		ApiResponse signupResponse = objectMapper.readValue(content, ApiResponse.class);
-		assertNotNull(signupResponse);
-		assertEquals(signupResponse.isSuccess(), true);
-	}
 	
 	@Test
-	@Order(3)
-	public void signup_already_in_use() throws Exception {
-		System.err.println(">>>Test signup_already_in_use");
-		MvcResult mvcResult = mvc.perform(post("/auth/signup")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\": \"admin\", \"email\": \"test_admin@gmail.com\", \"password\": \"qwerty\"}"))
-		.andReturn();
-		assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
-	}
-
-	@Test
-	@Order(4)
-	public void login() throws Exception {
-		System.err.println(">>>Test login");
-		MvcResult mvcResult = mvc.perform(post("/auth/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"email\":\"test_admin@gmail.com\",\"password\":\"qwerty\"}"))
-		.andReturn();
+	@Order(2)
+	@WithUserDetails("admin@gmail.com")
+	public void apply_for_job_with_login() throws Exception {
+		MvcResult mvcResult = applywithId(2);
 		assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 		String content = mvcResult.getResponse().getContentAsString();
-		assertNotNull(content);
+		ApplyJobResponse response = objectMapper.readValue(content, ApplyJobResponse.class);
+		assertNotNull(response);
+		assertEquals("success", response.getRequestStatus());
+	}
+	
+	private MvcResult applywithId(int id) throws Exception {
+		return mvc.perform(post("/application/apply/" + id)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andReturn();
 	}
 
 	@Test
-	@WithUserDetails("test_admin@gmail.com")
-	@Order(5)
-	public void login_and_chk_profile() throws Exception {
-		System.err.println(">>>Test login_and_chk_profile");
-		MvcResult mvcResult = mvc.perform(get("/user/me")
+	@Order(3)
+	@WithUserDetails("admin@gmail.com")
+	public void re_apply_for_job() throws Exception {
+		MvcResult mvcResult = mvc.perform(post("/application/apply/1")
 				.contentType(MediaType.APPLICATION_JSON))
 		.andReturn();
 		assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 		String content = mvcResult.getResponse().getContentAsString();
-		assertNotNull(content);
-		User user = objectMapper.readValue(content, User.class);
-		assertNotNull(user);
-		assertEquals("test_admin@gmail.com", user.getEmail());
+		ApplyJobResponse response = objectMapper.readValue(content, ApplyJobResponse.class);
+		assertNotNull(response);
+		assertEquals("error", response.getRequestStatus());
 	}
 
 	@Test
-	@Order(6)
-	public void invaid_user_wrong_userid() throws Exception {
-		System.err.println(">>>Test invaid_user_wrong_userid");
-		mvc.perform(post("/auth/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"email\":\"usernotpresent@gmail.com\",\"password\":\"qwerty\"}"))
+	@Order(4)
+	public void apply_for_job_with_out_login() throws Exception {
+		mvc.perform(post("/application/apply/2")
+				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isUnauthorized());
 	}
 
 	@Test
+	@Order(5)
+	@WithUserDetails("admin@gmail.com")
+	public void apply_for_invalid_job() throws Exception {
+		MvcResult mvcResult = mvc.perform(post("/application/apply/11111111111111")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andReturn();
+		assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+		String content = mvcResult.getResponse().getContentAsString();
+		ApplyJobResponse response = objectMapper.readValue(content, ApplyJobResponse.class);
+		assertNotNull(response);
+		assertEquals("error", response.getRequestStatus());
+	}
+
+	@Test
+	@Order(6)
+	@WithUserDetails("admin@gmail.com")
+	public void get_applied_jobs() throws Exception {
+		try {
+			applywithId(1);
+		}catch(Exception e) {
+			
+		}
+		MvcResult mvcResult = mvc.perform(get("/application/getall")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andReturn();
+		assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+		String content = mvcResult.getResponse().getContentAsString();
+		UserJobApplicationCollection jobCollection = objectMapper.readValue(content, UserJobApplicationCollection.class);
+		assertNotNull(jobCollection);
+		assertNotNull(jobCollection.getApplications());
+		assertEquals(true, jobCollection.getApplications().size() >= 1);
+	}
+
+	@Test
 	@Order(7)
-	public void invaid_user_wrong_password() throws Exception {
-		System.err.println(">>>Test invaid_user_wrong_password");
-		mvc.perform(post("/auth/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"email\":\"test_admin@gmail.com\",\"password\":\"123\"}"))
+	public void get_applied_jobs_with_out_login() throws Exception {
+		mvc.perform(post("/application/getall")
+				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isUnauthorized());
 	}
 }
